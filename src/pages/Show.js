@@ -24,7 +24,7 @@ const Show = () => {
           setIsLoading(false);
         }
       });
-    return function cleanup() {
+    return () => {
       isMounted = false;
     };
   }, [id]);
