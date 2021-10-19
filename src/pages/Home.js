@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import ActorGrid from '../components/Actor/ActorGrid';
 import MainPageLayout from '../components/MainPageLayout';
+import ShowGrid from '../components/Show/ShowGrid';
 import { apiGet } from '../misc/config';
 
 const Home = () => {
@@ -21,16 +23,14 @@ const Home = () => {
 
   const renderResults = () => {
     if (results && results.length > 0) {
-      return results[0].show
-        ? results.map(item => {
-            return <div key={item.show.id}>{item.show.name}</div>;
-          })
-        : results.map(item => {
-            return <div key={item.person.id}>{item.person.name}</div>;
-          });
+      return results[0].show ? (
+        <ShowGrid data={results} />
+      ) : (
+        <ActorGrid data={results} />
+      );
     }
     if (results && results.length === 0) {
-      return `No ${searchOption}s found.`;
+      return `No results found.`;
     }
     return null;
   };
