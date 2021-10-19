@@ -69,7 +69,7 @@ const Home = () => {
           />
         </label>
       </div>
-      <div>{renderResults()}</div>i
+      <div>{renderResults()}</div>
     </MainPageLayout>
   );
 };
