@@ -1,5 +1,10 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useReducer, useEffect } from 'react';
 import { useParams } from 'react-router';
+import Cast from '../components/Show/Cast';
+import Details from '../components/Show/Details';
+import Seasons from '../components/Show/Seasons';
+import ShowMainData from '../components/Show/ShowMainData';
 import { apiGet } from '../misc/config';
 
 const initialState = {
@@ -57,7 +62,33 @@ const Show = () => {
     return <div>Error occurred: e</div>;
   }
 
-  return <div>{JSON.stringify(show)}</div>;
+  return (
+    <div>
+      <ShowMainData
+        name={show.name}
+        rating={show.rating}
+        summary={show.summary}
+        tags={show.genres}
+        image={show.image}
+      />
+      <div>
+        <h2>Details</h2>
+        <Details
+          status={show.status}
+          premiered={show.premiered}
+          network={show.network}
+        />
+      </div>
+      <div>
+        <h2>Seasons</h2>
+        <Seasons seasons={show._embedded.seasons} />
+      </div>
+      <div>
+        <h2>Cast</h2>
+        <Cast cast={show._embedded.cast} />
+      </div>
+    </div>
+  );
 };
 
 export default Show;
