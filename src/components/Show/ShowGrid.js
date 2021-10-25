@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { useCallback } from 'react';
 import ShowCard from './ShowCard';
 import { FlexGrid } from '../styled';
 import { IMG_PLACEHOLDER } from '../../misc/constants';
@@ -11,12 +12,12 @@ const ShowGrid = ({ data }) => {
     <FlexGrid>
       {data.map(({ show }) => {
         const isStarred = starredShows.includes(show.id);
-        const onStarClick = () => {
+        const onStarClick = useCallback(() => {
           dispatchStarred({
             type: isStarred ? 'DELETE' : 'ADD',
             showId: show.id,
           });
-        };
+        }, [isStarred, show]);
 
         return (
           <ShowCard
