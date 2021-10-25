@@ -1,4 +1,5 @@
 import { useReducer, useEffect, useState } from 'react';
+import { apiGet } from './config';
 
 function showsReducer(prevState, action) {
   switch (action.type) {
@@ -10,6 +11,19 @@ function showsReducer(prevState, action) {
       return prevState;
   }
 }
+
+const showReducer = (state, { type, show, error }) => {
+  switch (type) {
+    case 'FETCH_SUCCESS':
+      return { isLoading: false, show, error: null };
+
+    case 'FETCH_ERROR':
+      return { ...state, isLoading: false, error };
+
+    default:
+      return state;
+  }
+};
 
 function usePersistedReducer(reducer, initialState, key) {
   const [state, dispatch] = useReducer(reducer, initialState, initial => {
@@ -40,4 +54,36 @@ export function useLastInput(key = 'lastInput') {
   };
 
   return [input, setPersistedInput];
+}
+
+export function useShow(showId) {
+  const [state, dispatch] = useReducer(showReducer, {
+    show: null,
+    isLoading: true,
+    error: null,
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    apiGet(`/shows/${showId}?embed[]=seasons&embed[]=cast`)
+      .then(r => {
+        if (isMounted) {
+          dispatch({ type: 'FETCH_SUCCESS', isLoading: false, show: r });
+        }
+      })
+      .catch(e => {
+        if (isMounted) {
+          dispatch({
+            type: 'FETCH_ERROR',
+            isLoading: false,
+            error: e.message,
+          });
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [showId]);
+
+  return state;
 }
